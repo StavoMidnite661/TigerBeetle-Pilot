@@ -30,13 +30,13 @@ export default function TransfersPage() {
 
   return (
     <div className="flex-1">
-      <AppHeader title="Funding (oFIAT)" />
+      <AppHeader title="Funding (sFIAT)" />
       <main className="p-4 sm:p-6 grid gap-6 md:grid-cols-5">
         <div className="md:col-span-2 lg:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>Create oFIAT Attestation</CardTitle>
-              <CardDescription>Introduce value into the system by creating an oFIAT attestation. This is a receipt for an external value commitment.</CardDescription>
+              <CardTitle>Create sFIAT Attestation</CardTitle>
+              <CardDescription>Introduce value into the system by creating an sFIAT attestation. This is a receipt for an external value commitment.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -62,7 +62,7 @@ export default function TransfersPage() {
           <Card>
             <CardHeader>
               <CardTitle>Cleared Transfers (Ledger)</CardTitle>
-              <CardDescription>The immutable record of all cleared transfers. Value enters the system via oFIAT and is cleared here.</CardDescription>
+              <CardDescription>The immutable record of all cleared transfers. Value enters the system via sFIAT and is cleared here.</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -80,7 +80,7 @@ export default function TransfersPage() {
                   {transfers.map((transfer) => (
                     <TableRow key={transfer.id}>
                       <TableCell className="font-medium">{transfer.id}</TableCell>
-                      <TableCell>{transfer.fromAccountId || 'oFIAT Genesis'}</TableCell>
+                      <TableCell>{transfer.fromAccountId || 'sFIAT Genesis'}</TableCell>
                       <TableCell>{transfer.toAccountId}</TableCell>
                       <TableCell className="text-right">
                         ${transfer.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

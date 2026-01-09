@@ -32,9 +32,9 @@ export default function AttestationsPage() {
       <main className="p-4 sm:p-6">
         <Card>
           <CardHeader>
-            <CardTitle>oFIAT Attestations</CardTitle>
+            <CardTitle>sFIAT Attestations</CardTitle>
             <CardDescription>
-              A list of all oFIAT attestations awaiting clearance. Clearing an attestation finalizes the value transfer.
+              A list of all sFIAT attestations awaiting clearance. Clearing an attestation finalizes the value transfer.
             </CardDescription>
           </CardHeader>
           <CardContent>
