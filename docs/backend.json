@@ -1,0 +1,212 @@
+{
+  "entities": {
+    "TigerBeetleAccount": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "TigerBeetleAccount",
+      "type": "object",
+      "description": "Represents a TigerBeetle account within the system.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the TigerBeetle account."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the TigerBeetle account."
+        },
+        "accountId": {
+          "type": "number",
+          "description": "The account ID in the TigerBeetle ledger."
+        },
+        "code": {
+          "type": "number",
+          "description": "Account code."
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "accountId"
+      ]
+    },
+    "TigerBeetleTransaction": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "TigerBeetleTransaction",
+      "type": "object",
+      "description": "Represents a transaction within the TigerBeetle ledger.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the TigerBeetle transaction."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of the transaction.",
+          "format": "date-time"
+        },
+        "debitAccountId": {
+          "type": "string",
+          "description": "Reference to TigerBeetleAccount. (Relationship: TigerBeetleAccount 1:N TigerBeetleTransaction) The account ID debited in the transaction."
+        },
+        "creditAccountId": {
+          "type": "string",
+          "description": "Reference to TigerBeetleAccount. (Relationship: TigerBeetleAccount 1:N TigerBeetleTransaction) The account ID credited in the transaction."
+        },
+        "amount": {
+          "type": "number",
+          "description": "The amount transferred in the transaction."
+        }
+      },
+      "required": [
+        "id",
+        "timestamp",
+        "debitAccountId",
+        "creditAccountId",
+        "amount"
+      ]
+    },
+    "Configuration": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Configuration",
+      "type": "object",
+      "description": "Stores configuration settings for the TigerBeetle Pilot application.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the configuration setting."
+        },
+        "key": {
+          "type": "string",
+          "description": "The key of the configuration setting."
+        },
+        "value": {
+          "type": "string",
+          "description": "The value of the configuration setting."
+        },
+        "description": {
+          "type": "string",
+          "description": "Description of configuration."
+        }
+      },
+      "required": [
+        "id",
+        "key",
+        "value"
+      ]
+    },
+    "LogEntry": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "LogEntry",
+      "type": "object",
+      "description": "Represents a log entry within the system for auditing and monitoring.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the log entry."
+        },
+        "timestamp": {
+          "type": "string",
+          "description": "Timestamp of the log entry.",
+          "format": "date-time"
+        },
+        "level": {
+          "type": "string",
+          "description": "Log level (e.g., INFO, WARNING, ERROR)."
+        },
+        "message": {
+          "type": "string",
+          "description": "The log message."
+        },
+        "context": {
+          "type": "string",
+          "description": "Context of Log (e.g. Auth , Transcation, Security)."
+        }
+      },
+      "required": [
+        "id",
+        "timestamp",
+        "level",
+        "message"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/tigerbeetle_accounts/{accountId}",
+        "definition": {
+          "entityName": "TigerBeetleAccount",
+          "schema": {
+            "$ref": "#/backend/entities/TigerBeetleAccount"
+          },
+          "description": "Stores TigerBeetle account information.",
+          "params": [
+            {
+              "name": "accountId",
+              "description": "The unique identifier of the TigerBeetle account."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/tigerbeetle_accounts/{accountId}/tigerbeetle_transactions/{transactionId}",
+        "definition": {
+          "entityName": "TigerBeetleTransaction",
+          "schema": {
+            "$ref": "#/backend/entities/TigerBeetleTransaction"
+          },
+          "description": "Stores TigerBeetle transactions associated with a specific account.",
+          "params": [
+            {
+              "name": "accountId",
+              "description": "The unique identifier of the TigerBeetle account."
+            },
+            {
+              "name": "transactionId",
+              "description": "The unique identifier of the transaction."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/configurations/{configId}",
+        "definition": {
+          "entityName": "Configuration",
+          "schema": {
+            "$ref": "#/backend/entities/Configuration"
+          },
+          "description": "Stores configuration settings for the application.",
+          "params": [
+            {
+              "name": "configId",
+              "description": "The unique identifier of the configuration setting."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/log_entries/{logId}",
+        "definition": {
+          "entityName": "LogEntry",
+          "schema": {
+            "$ref": "#/backend/entities/LogEntry"
+          },
+          "description": "Stores log entries for auditing and monitoring.",
+          "params": [
+            {
+              "name": "logId",
+              "description": "The unique identifier of the log entry."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed to support the TigerBeetle Pilot application, focusing on security, debuggability, and scalability.  Authorization Independence is achieved by avoiding `get()` calls in security rules, which is critical for atomic operations.  Structural Segregation ensures that each collection has a homogeneous security posture. Access Modeling uses standardized patterns for authorization, primarily path-based ownership. \n\n*   **TigerBeetle Accounts (`tigerbeetle_accounts`):** Stores account information. No specific ownership, hence no `users/{uid}` path.  Accounts could be made collaborative via a 'members' map if needed, but the base use case doesn't suggest it.\n*   **TigerBeetle Transactions (`tigerbeetle_transactions`):** Transactions related to the accounts.  Since transactions are linked 1:N with Accounts, they are stored as a subcollection of Accounts. This is a direct relationship between accounts and transactions, and the accountId is stored within the transaction.\n*   **Configurations (`configurations`):** Stores system configurations.  Since these need to be editable by admins, they are stored in a root collection.\n*   **Log Entries (`log_entries`):** Stores log entries for auditing and monitoring.  Stored in a root collection for easy querying.\n\nThe structure supports QAPs through structural segregation.  Admin-level configurations are separated from user-level data.  The lack of hierarchical authorization avoids the need for complex filtering based on `get()` calls in rules.\n\nThis setup enables secure list operations because security rules can be applied at the collection level without needing to inspect parent documents, and authorization independence means security rules are easier to reason about."
+  }
+}
