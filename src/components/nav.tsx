@@ -20,12 +20,14 @@ import {
   Activity,
   FileClock,
   Settings,
+  ShieldCheck,
 } from 'lucide-react';
 
 const mainLinks = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/accounts', label: 'Accounts', icon: Users },
-  { href: '/transfers', label: 'Transfers', icon: ArrowRightLeft },
+  { href: '/transfers', label: 'Clearing', icon: ArrowRightLeft },
+  { href: '/attestations', label: 'Attestations', icon: ShieldCheck },
 ];
 
 const toolsLinks = [

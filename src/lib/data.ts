@@ -17,6 +17,16 @@ export type Transfer = {
   createdAt: Date;
 };
 
+export type Attestation = {
+  id: string;
+  fromAccountId: string;
+  toAccountId: string;
+  amount: number;
+  currency: string;
+  status: 'pending' | 'issued' | 'rejected';
+  createdAt: Date;
+};
+
 export type Log = {
   id: string;
   timestamp: Date;
@@ -48,6 +58,13 @@ export const transfers: Transfer[] = [
   { id: 't_003', fromAccountId: '1003', toAccountId: '1001', amount: 500.00, currency: 'USD', status: 'pending', createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000) },
   { id: 't_004', fromAccountId: '1005', toAccountId: '1004', amount: 100.00, currency: 'USD', status: 'failed', createdAt: new Date(Date.now() - 5 * 60 * 60 * 1000) },
   { id: 't_005', fromAccountId: '1001', toAccountId: '1003', amount: 750.50, currency: 'USD', status: 'completed', createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000) },
+];
+
+export const attestations: Attestation[] = [
+    { id: 'att_001', fromAccountId: '1003', toAccountId: '1001', amount: 500.00, currency: 'USD', status: 'pending', createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000) },
+    { id: 'att_002', fromAccountId: '1001', toAccountId: '1005', amount: 10000.00, currency: 'USD', status: 'issued', createdAt: new Date(Date.now() - 8 * 60 * 60 * 1000) },
+    { id: 'att_003', fromAccountId: '1002', toAccountId: '1003', amount: 250.00, currency: 'USD', status: 'pending', createdAt: new Date(Date.now() - 1 * 60 * 60 * 1000) },
+    { id: 'att_004', fromAccountId: '1005', toAccountId: '1001', amount: 5000.00, currency: 'USD', status: 'rejected', createdAt: new Date(Date.now() - 16 * 60 * 60 * 1000) },
 ];
 
 export const logs: Log[] = [

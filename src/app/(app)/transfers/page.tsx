@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { transfers } from "@/lib/data";
-import { ArrowRightLeft } from "lucide-react";
+import { ArrowRightLeft, ShieldCheck } from "lucide-react";
 
 export default function TransfersPage() {
     const statusVariant = {
@@ -30,13 +30,13 @@ export default function TransfersPage() {
 
   return (
     <div className="flex-1">
-      <AppHeader title="Transfers" />
+      <AppHeader title="Attestation & Clearing" />
       <main className="p-4 sm:p-6 grid gap-6 md:grid-cols-5">
         <div className="md:col-span-2 lg:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>New Transfer</CardTitle>
-              <CardDescription>Initiate a new transfer between accounts.</CardDescription>
+              <CardTitle>Request Attestation</CardTitle>
+              <CardDescription>Request attestation for a new transfer.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -52,8 +52,8 @@ export default function TransfersPage() {
                 <Input id="amount" type="number" placeholder="0.00" />
               </div>
               <Button className="w-full">
-                <ArrowRightLeft className="mr-2 h-4 w-4" />
-                Submit Transfer
+                <ShieldCheck className="mr-2 h-4 w-4" />
+                Request Attestation
               </Button>
             </CardContent>
           </Card>
@@ -61,8 +61,8 @@ export default function TransfersPage() {
         <div className="md:col-span-3 lg:col-span-4">
           <Card>
             <CardHeader>
-              <CardTitle>Recent Transfers</CardTitle>
-              <CardDescription>A list of recent transfers in the system.</CardDescription>
+              <CardTitle>Cleared Transfers (Ledger)</CardTitle>
+              <CardDescription>The immutable record of all cleared transfers.</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
