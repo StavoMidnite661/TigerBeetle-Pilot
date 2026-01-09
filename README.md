@@ -63,6 +63,81 @@ This is the only allowed flow for introducing value:
 
 ---
 
+## Canonical Authority Diagram
+
+This diagram encodes the doctrine visually and prevents agent confusion. It is the unyielding source of truth for authority flow.
+
+```mermaid
+%% sFIAT → Clearing → Spending (Canonical Flow)
+flowchart TD
+    %% =========================
+    %% External World
+    %% =========================
+    EV[External Real-World<br/>Value Commitment]
+        -->|Evidence| SF[sFIAT Attestation]
+%% =========================
+    %% Authority Gate
+    %% =========================
+    SF -->|Authorize| OP[Operator / Trust<br/>Authorization]
+%% =========================
+    %% Ledger Authority
+    %% =========================
+    OP -->|Mint / Allocate| TB[(TigerBeetle<br/>Clearing Ledger)]
+%% =========================
+    %% State Transition
+    %% =========================
+    TB -->|Cleared Balance| BAL[Spendable Ledger Balance]
+%% =========================
+    %% Execution Layer
+    %% =========================
+    BAL -->|Spend Request| SP[Spend Engine]
+    SP -->|Honor| AD[Adapter / Merchant]
+%% =========================
+    %% Prohibitions
+    %% =========================
+    SF -.x-> SP
+    SF -.x-> AD
+    OP -.x-> AD
+    AD -.x-> TB
+%% =========================
+    %% Notes
+    %% =========================
+    classDef authority fill:#0f172a,color:#fff,stroke:#38bdf8,stroke-width:2px
+    classDef forbidden fill:#7f1d1d,color:#fff,stroke:#ef4444,stroke-width:2px
+class TB authority
+    class SF,SP,AD forbidden
+```
+
+### How to Read This Diagram (Agent-Safe)
+- **Solid arrows (→)**: ✅ Allowed authority flow
+- **Dashed red arrows (-.x->)**: ❌ Forbidden authority shortcuts
+
+### Key Authority Rules Encoded
+1.  **sFIAT Is a Gate — Not a Balance**
+    *   sFIAT never touches:
+        *   Spend Engine
+        *   Adapters
+        *   Ledger balances
+    *   If an agent draws a path from sFIAT to spending → they’re wrong.
+
+2.  **TigerBeetle Is the Sole Clearing Authority**
+    *   Only TigerBeetle can create:
+        *   Spendable balances
+    *   No adapter, narrative, or service may bypass it.
+
+3.  **Honoring Is Downstream Only**
+    *   Adapters act *after* clearing.
+    *   Honoring failure does not roll back clearing.
+
+4.  **No Reverse Authority**
+    *   Adapters cannot mutate ledger state.
+    *   Operators cannot honor.
+    *   Clients cannot clear.
+
+Any code path not representable by this diagram is invalid by definition.
+
+---
+
 ## Architecture
 
 The core architecture is a hardened, locked-in structure embodying the SOVR doctrine.
