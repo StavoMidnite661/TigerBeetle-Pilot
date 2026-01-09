@@ -21,6 +21,7 @@ import {
   FileClock,
   Settings,
   ShieldCheck,
+  History,
 } from 'lucide-react';
 
 const mainLinks = [
@@ -28,6 +29,7 @@ const mainLinks = [
   { href: '/accounts', label: 'Accounts', icon: Users },
   { href: '/transfers', label: 'Funding (sFIAT)', icon: ArrowRightLeft },
   { href: '/attestations', label: 'Attestation & Clearing', icon: ShieldCheck },
+  { href: '/transfers/history', label: 'Transfer History', icon: History },
 ];
 
 const toolsLinks = [
@@ -66,7 +68,7 @@ export default function AppNav() {
             </SidebarMenuItem>
           {toolsLinks.map((link) => (
             <SidebarMenuItem key={link.href}>
-              <SidebarMenuButton asChild isActive={pathname === link.href} tooltip={link.label}>
+              <SidebarMenuButton asChild isActive={pathname.startsWith(link.href)} tooltip={link.label}>
                 <Link href={link.href}>
                   <link.icon />
                   <span>{link.label}</span>
