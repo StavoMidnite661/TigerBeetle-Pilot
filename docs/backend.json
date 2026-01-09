@@ -18,6 +18,10 @@
           "type": "number",
           "description": "The account ID in the TigerBeetle ledger."
         },
+        "balance": {
+            "type": "number",
+            "description": "The current balance of the account."
+        },
         "code": {
           "type": "number",
           "description": "Account code."
@@ -28,6 +32,36 @@
         "name",
         "accountId"
       ]
+    },
+    "sFiatAttestation": {
+      "title": "sFIAT Attestation",
+      "type": "object",
+      "description": "Represents an attestation of external value (sFIAT) that is pending clearance.",
+      "properties": {
+        "toAccountId": {
+          "type": "string",
+          "description": "The destination account ID for the attested value."
+        },
+        "amount": {
+          "type": "number",
+          "description": "The amount of value being attested."
+        },
+        "commitmentId": {
+          "type": "string",
+          "description": "The identifier for the external value commitment (e.g., wire transfer ID)."
+        },
+        "status": {
+          "type": "string",
+          "enum": ["pending", "issued", "rejected"],
+          "description": "The status of the attestation."
+        },
+        "createdAt": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Timestamp when the attestation was created."
+        }
+      },
+      "required": ["toAccountId", "amount", "commitmentId", "status", "createdAt"]
     },
     "TigerBeetleTransaction": {
       "$schema": "http://json-schema.org/draft-07/schema#",
@@ -154,22 +188,34 @@
           ]
         }
       },
+       {
+        "path": "/attestations/{attestationId}",
+        "definition": {
+          "entityName": "sFiatAttestation",
+          "schema": {
+            "$ref": "#/backend/entities/sFiatAttestation"
+          },
+          "description": "Stores sFIAT attestations pending clearance.",
+          "params": [
+            {
+              "name": "attestationId",
+              "description": "The unique identifier of the sFIAT attestation."
+            }
+          ]
+        }
+      },
       {
-        "path": "/tigerbeetle_accounts/{accountId}/tigerbeetle_transactions/{transactionId}",
+        "path": "/transfers/{transferId}",
         "definition": {
           "entityName": "TigerBeetleTransaction",
           "schema": {
             "$ref": "#/backend/entities/TigerBeetleTransaction"
           },
-          "description": "Stores TigerBeetle transactions associated with a specific account.",
+          "description": "Stores cleared TigerBeetle transactions.",
           "params": [
             {
-              "name": "accountId",
-              "description": "The unique identifier of the TigerBeetle account."
-            },
-            {
-              "name": "transactionId",
-              "description": "The unique identifier of the transaction."
+              "name": "transferId",
+              "description": "The unique identifier of the transfer."
             }
           ]
         }
@@ -207,6 +253,6 @@
         }
       }
     ],
-    "reasoning": "The Firestore data structure is designed to support the TigerBeetle Pilot application, focusing on security, debuggability, and scalability.  Authorization Independence is achieved by avoiding `get()` calls in security rules, which is critical for atomic operations.  Structural Segregation ensures that each collection has a homogeneous security posture. Access Modeling uses standardized patterns for authorization, primarily path-based ownership. \n\n*   **TigerBeetle Accounts (`tigerbeetle_accounts`):** Stores account information. No specific ownership, hence no `users/{uid}` path.  Accounts could be made collaborative via a 'members' map if needed, but the base use case doesn't suggest it.\n*   **TigerBeetle Transactions (`tigerbeetle_transactions`):** Transactions related to the accounts.  Since transactions are linked 1:N with Accounts, they are stored as a subcollection of Accounts. This is a direct relationship between accounts and transactions, and the accountId is stored within the transaction.\n*   **Configurations (`configurations`):** Stores system configurations.  Since these need to be editable by admins, they are stored in a root collection.\n*   **Log Entries (`log_entries`):** Stores log entries for auditing and monitoring.  Stored in a root collection for easy querying.\n\nThe structure supports QAPs through structural segregation.  Admin-level configurations are separated from user-level data.  The lack of hierarchical authorization avoids the need for complex filtering based on `get()` calls in rules.\n\nThis setup enables secure list operations because security rules can be applied at the collection level without needing to inspect parent documents, and authorization independence means security rules are easier to reason about."
+    "reasoning": "The Firestore data structure is designed to support the TigerBeetle Pilot application, focusing on security, debuggability, and scalability.  Authorization Independence is achieved by avoiding `get()` calls in security rules, which is critical for atomic operations.  Structural Segregation ensures that each collection has a homogeneous security posture. Access Modeling uses standardized patterns for authorization, primarily path-based ownership. \n\n*   **TigerBeetle Accounts (`tigerbeetle_accounts`):** Stores account information. No specific ownership, hence no `users/{uid}` path.  Accounts could be made collaborative via a 'members' map if needed, but the base use case doesn't suggest it.\n*   **sFIAT Attestations (`attestations`):** Stores attestations of external value, which are requests for clearance. These are stored in a root collection for operators to query.\n*   **Transfers (`transfers`):** The immutable log of cleared transactions. Stored in a root collection for historical auditing.\n*   **Configurations (`configurations`):** Stores system configurations.  Since these need to be editable by admins, they are stored in a root collection.\n*   **Log Entries (`log_entries`):** Stores log entries for auditing and monitoring.  Stored in a root collection for easy querying.\n\nThe structure supports QAPs through structural segregation.  Admin-level configurations are separated from user-level data.  The lack of hierarchical authorization avoids the need for complex filtering based on `get()` calls in rules.\n\nThis setup enables secure list operations because security rules can be applied at the collection level without needing to inspect parent documents, and authorization independence means security rules are easier to reason about."
   }
 }

@@ -22,6 +22,9 @@ import { useCollection, useFirestore, useMemoFirebase } from "@/firebase";
 import { PlusCircle } from "lucide-react";
 import { collection } from "firebase/firestore";
 import { Skeleton } from "@/components/ui/skeleton";
+import { setDocumentNonBlocking } from "@/firebase/non-blocking-updates";
+import { doc } from 'firebase/firestore';
+
 
 export default function AccountsPage() {
   const firestore = useFirestore();
@@ -37,10 +40,24 @@ export default function AccountsPage() {
     closed: "destructive",
   } as const;
 
+  const createNewAccount = () => {
+    if (!firestore) return;
+    const accountId = `acc_${Date.now()}`;
+    const newAccountRef = doc(firestore, 'tigerbeetle_accounts', accountId);
+    setDocumentNonBlocking(newAccountRef, {
+        id: accountId,
+        userId: 'user_' + Math.floor(Math.random() * 10),
+        balance: 0,
+        currency: 'USD',
+        status: 'active',
+        createdAt: new Date().toISOString(),
+    }, {});
+  }
+
   return (
     <div className="flex-1">
       <AppHeader title="Accounts">
-        <Button>
+        <Button onClick={createNewAccount}>
           <PlusCircle className="mr-2 h-4 w-4" />
           Create Account
         </Button>
@@ -93,7 +110,7 @@ export default function AccountsPage() {
             </Table>
              {!isLoading && (!accounts || accounts.length === 0) && (
               <div className="text-center p-8 text-muted-foreground">
-                No accounts found.
+                No accounts found. Create one to get started.
               </div>
             )}
           </CardContent>

@@ -23,12 +23,10 @@ service cloud.firestore {
 
     /**
      * Placeholder for administrative or backend-only access.
-     * By default, this returns false. When admin roles are implemented,
-     * this function should be updated (e.g., using custom claims).
+     * For now, we allow any signed-in user to act as an operator.
      */
-    function isBackendOrAdmin() {
-      // return request.auth.token.admin == true;
-      return false;
+    function isOperator() {
+      return isSignedIn();
     }
 
     // ------------------------------------------------------------------------
@@ -37,43 +35,53 @@ service cloud.firestore {
 
     /**
      * @description Manages TigerBeetle financial account data.
-     * @path /tigerbeetle_accounts/{accountId}
-     * @allow (read) - Authenticated users (operators) can read account data.
-     * @allow (write) - Write access is restricted to backend/admin processes to ensure data integrity.
      */
     match /tigerbeetle_accounts/{accountId} {
-      allow get: if isSignedIn();
-      allow list: if isSignedIn();
-      allow create: if isBackendOrAdmin();
-      allow update: if isBackendOrAdmin();
-      allow delete: if isBackendOrAdmin();
-
-      /**
-       * @description Manages transaction records for a specific TigerBeetle account.
-       * @path /tigerbeetle_accounts/{accountId}/tigerbeetle_transactions/{transactionId}
-       * @allow (read/write) - All access is restricted to backend services.
-       */
-      match /tigerbeetle_transactions/{transactionId} {
-        allow read, write: if isBackendOrAdmin();
-      }
+      allow read: if isOperator();
+      // In a real scenario, account creation and balance updates would be strictly backend-only.
+      // For this simulation, we allow operators to create accounts and update balances.
+      allow write: if isOperator();
     }
 
     /**
+     * @description Manages sFIAT attestations.
+     */
+    match /attestations/{attestationId} {
+        // Operators can read all attestations
+        allow list, get: if isOperator();
+        // Operators can create new attestations
+        allow create: if isOperator();
+        // Operators can update an attestation's status (e.g., to 'issued')
+        allow update: if isOperator() && request.resource.data.status != resource.data.status;
+    }
+    
+    /**
+     * @description Immutable log of cleared transfers.
+     */
+    match /transfers/{transferId} {
+        // Operators can read the history of transfers
+        allow list, get: if isOperator();
+        // Only operators (simulating the clearing service) can create a transfer record.
+        allow create: if isOperator();
+        // Transfers are immutable. No updates or deletes allowed.
+        allow update, delete: if false;
+    }
+
+
+    /**
      * @description Stores system-wide configuration settings.
-     * @path /configurations/{configId}
-     * @allow (read/write) - Access is restricted to backend or administrative users.
+     * Access is restricted to backend or administrative users.
      */
     match /configurations/{configId} {
-      allow read, write: if isBackendOrAdmin();
+      allow read, write: if false; // Restricted to backend/admin
     }
 
     /**
      * @description Stores audit and monitoring logs.
-     * @path /log_entries/{logId}
-     * @allow (read/write) - Access is restricted to backend services to ensure log integrity.
+     * Access is restricted to backend services to ensure log integrity.
      */
     match /log_entries/{logId} {
-      allow read, write: if isBackendOrAdmin();
+      allow read, write: if false; // Restricted to backend/admin
     }
   }
 }
