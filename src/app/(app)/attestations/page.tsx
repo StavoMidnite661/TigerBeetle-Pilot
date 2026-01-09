@@ -17,7 +17,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { attestations } from "@/lib/data";
-import { Check, ShieldQuestion } from "lucide-react";
+import { Check } from "lucide-react";
 
 export default function AttestationsPage() {
   const statusVariant = {
@@ -28,13 +28,13 @@ export default function AttestationsPage() {
 
   return (
     <div className="flex-1">
-      <AppHeader title="Attestations" />
+      <AppHeader title="Attestation & Clearing" />
       <main className="p-4 sm:p-6">
         <Card>
           <CardHeader>
-            <CardTitle>Transfer Attestations</CardTitle>
+            <CardTitle>oFIAT Attestations</CardTitle>
             <CardDescription>
-              A list of all transfer attestations awaiting clearance.
+              A list of all oFIAT attestations awaiting clearance. Clearing an attestation finalizes the value transfer.
             </CardDescription>
           </CardHeader>
           <CardContent>
@@ -42,8 +42,7 @@ export default function AttestationsPage() {
               <TableHeader>
                 <TableRow>
                   <TableHead>Attestation ID</TableHead>
-                  <TableHead>From Account</TableHead>
-                  <TableHead>To Account</TableHead>
+                  <TableHead>Destination Account</TableHead>
                   <TableHead className="text-right">Amount</TableHead>
                   <TableHead>Status</TableHead>
                   <TableHead>Issued At</TableHead>
@@ -56,7 +55,6 @@ export default function AttestationsPage() {
                     <TableCell className="font-medium">
                       {attestation.id}
                     </TableCell>
-                    <TableCell>{attestation.fromAccountId}</TableCell>
                     <TableCell>{attestation.toAccountId}</TableCell>
                     <TableCell className="text-right">
                       $
@@ -77,7 +75,7 @@ export default function AttestationsPage() {
                       {attestation.status === "pending" && (
                         <Button variant="outline" size="sm">
                           <Check className="mr-2 h-3 w-3" />
-                          Clear Transfer
+                          Clear Attestation
                         </Button>
                       )}
                     </TableCell>

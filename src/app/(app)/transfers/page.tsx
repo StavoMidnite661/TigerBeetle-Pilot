@@ -19,7 +19,7 @@ import {
 } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { transfers } from "@/lib/data";
-import { ArrowRightLeft, ShieldCheck } from "lucide-react";
+import { ShieldCheck } from "lucide-react";
 
 export default function TransfersPage() {
     const statusVariant = {
@@ -30,30 +30,30 @@ export default function TransfersPage() {
 
   return (
     <div className="flex-1">
-      <AppHeader title="Attestation & Clearing" />
+      <AppHeader title="Funding (oFIAT)" />
       <main className="p-4 sm:p-6 grid gap-6 md:grid-cols-5">
         <div className="md:col-span-2 lg:col-span-1">
           <Card>
             <CardHeader>
-              <CardTitle>Request Attestation</CardTitle>
-              <CardDescription>Request attestation for a new transfer.</CardDescription>
+              <CardTitle>Create oFIAT Attestation</CardTitle>
+              <CardDescription>Introduce value into the system by creating an oFIAT attestation. This is a receipt for an external value commitment.</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="from-account">From Account</Label>
-                <Input id="from-account" placeholder="Source Account ID" />
-              </div>
-              <div className="space-y-2">
-                <Label htmlFor="to-account">To Account</Label>
-                <Input id="to-account" placeholder="Destination Account ID" />
+                <Label htmlFor="to-account">Destination Account</Label>
+                <Input id="to-account" placeholder="Account ID to be credited" />
               </div>
               <div className="space-y-2">
                 <Label htmlFor="amount">Amount (USD)</Label>
                 <Input id="amount" type="number" placeholder="0.00" />
               </div>
+               <div className="space-y-2">
+                <Label htmlFor="commitment-id">External Commitment ID</Label>
+                <Input id="commitment-id" placeholder="e.g., Wire Transfer ID" />
+              </div>
               <Button className="w-full">
                 <ShieldCheck className="mr-2 h-4 w-4" />
-                Request Attestation
+                Create Attestation
               </Button>
             </CardContent>
           </Card>
@@ -62,7 +62,7 @@ export default function TransfersPage() {
           <Card>
             <CardHeader>
               <CardTitle>Cleared Transfers (Ledger)</CardTitle>
-              <CardDescription>The immutable record of all cleared transfers.</CardDescription>
+              <CardDescription>The immutable record of all cleared transfers. Value enters the system via oFIAT and is cleared here.</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -80,7 +80,7 @@ export default function TransfersPage() {
                   {transfers.map((transfer) => (
                     <TableRow key={transfer.id}>
                       <TableCell className="font-medium">{transfer.id}</TableCell>
-                      <TableCell>{transfer.fromAccountId}</TableCell>
+                      <TableCell>{transfer.fromAccountId || 'oFIAT Genesis'}</TableCell>
                       <TableCell>{transfer.toAccountId}</TableCell>
                       <TableCell className="text-right">
                         ${transfer.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}

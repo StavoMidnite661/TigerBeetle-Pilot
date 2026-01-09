@@ -10,11 +10,64 @@ The system operates under a strict SOVR doctrine:
 - **Attestation Precedes Clearing**: All operations require attestation before execution. There are no reversals.
 - **Language Discipline**: The agent audits all interactions for forbidden terms, enforcing strict compliance with SOVR principles.
 
+---
+
+## The Funding Doctrine: oFIAT
+
+### Sustainability Without a Credit System
+The core principle is that the system does not extend credit, promise redemption, or create future obligations. It settles by clearing **attested value**. Agents must never model, imply, or simulate a credit relationship.
+
+Operationally, this means:
+- **No lending or borrowing**
+- **No negative balances**
+- **No IOUs or future promises**
+- **No "available credit"**
+- **No balance sheet expansion**
+
+### The oFIAT Mechanism
+Value is introduced **only by Attestation**. This is not finance; it is mechanical truth. Value enters through explicit, external attestation events.
+
+**oFIAT** is the formal representation of this external value commitment. It is a receipt that says, "real-world value has already been committed elsewhere." It is evidence, not money.
+
+### What oFIAT is (Formally)
+oFIAT represents:
+1.  A **declared value source**.
+2.  Backed by an **off-ledger real-world commitment**.
+3.  Introduced only via an **explicit operator/trust authorization**.
+4.  Converted into **on-ledger cleared spendable units**.
+5.  Once converted, the oFIAT **disappears**. It does not live inside the system.
+
+Only cleared balances remain. The system no longer cares "where it came from." Only conservation and balances matter.
+
+### What oFIAT is NOT
+An agent must never treat oFIAT as:
+- A loan or credit
+- A balance that can go negative
+- A redeemable promise
+- A stablecoin
+- A claim on reserves
+- A liability of the system
+
+If an agent models redemption, repayment, or backing guarantees, they are violating core doctrine.
+
+### The Funding Flow (Exact Order)
+This is the only allowed flow for introducing value:
+1.  **External Value Commitment** (e.g., a wire transfer is confirmed)
+2.  **oFIAT Attestation Event** (An operator creates an attestation, referencing the commitment)
+3.  **Operator/Trust Authorization** (The system verifies the operator's permission)
+4.  **Ledger Mint/Allocation** (This step is metaphorical; no "minting" occurs. The attestation is prepared for clearing.)
+5.  **TigerBeetle Clearing** (The attestation is cleared, and the corresponding balance is updated)
+6.  **Spendable Balance Exists**
+
+**No step may be skipped.**
+
+---
+
 ## Architecture
 
-The core architecture is designed to be a hardened, locked-in structure embodying the SOVR doctrine.
+The core architecture is a hardened, locked-in structure embodying the SOVR doctrine.
 
-- **Orchestrator**: Utilizes GenAI (Grok/Claude) for deterministic reasoning on transfers and attestation planning.
+- **Orchestrator**: Utilizes GenAI for deterministic reasoning on transfers and attestation planning.
 - **SOVR Tools**: A suite of tools for clearing, attestation, and observation, ensuring no-value-drift and enforcing policy.
     - **Clearing Tools**: Submit transfers and verify finality with mechanical truth.
     - **Attestation Tools**: Validate claims, issue tokens, and prevent double-spends.

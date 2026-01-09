@@ -26,8 +26,8 @@ import {
 const mainLinks = [
   { href: '/dashboard', label: 'Dashboard', icon: LayoutDashboard },
   { href: '/accounts', label: 'Accounts', icon: Users },
-  { href: '/transfers', label: 'Clearing', icon: ArrowRightLeft },
-  { href: '/attestations', label: 'Attestations', icon: ShieldCheck },
+  { href: '/transfers', label: 'Funding (oFIAT)', icon: ArrowRightLeft },
+  { href: '/attestations', label: 'Attestation & Clearing', icon: ShieldCheck },
 ];
 
 const toolsLinks = [
