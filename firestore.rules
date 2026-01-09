@@ -3,29 +3,8 @@
  *
  * Core Philosophy:
  * The primary security posture is "default-deny" for all client-side (mobile/web app) access.
- * All data collections (`tigerbeetle_accounts`, `configurations`, `log_entries`) are assumed to be
- * created, read, and modified exclusively by trusted backend services using the Firebase Admin SDK,
- * which bypasses these security rules. This approach provides maximum security by preventing any
- * unauthorized client interaction with sensitive financial and configuration data.
- *
- * Data Structure:
- * The data is organized into three top-level collections:
- * - /tigerbeetle_accounts: Stores core financial account data.
- * - /configurations: Holds system-level settings.
- * - /log_entries: Contains audit and debug logs.
- * Additionally, a subcollection for transactions exists under each account:
- * - /tigerbeetle_accounts/{accountId}/tigerbeetle_transactions
- *
- * Key Security Decisions:
- * - No Client-Side Access: There is no concept of user data ownership in the provided data model
- *   (e.g., no `/users/{userId}` collection). Therefore, all direct client access is disabled to
- *   prevent potential security vulnerabilities.
- * - Placeholder for Admin Roles: A placeholder function `isBackendOrAdmin()` is included. When an
- *   admin role system is implemented (e.g., using custom claims), this function can be updated
- *   to grant specific administrative users read or write access.
- * - No Data Validation: In line with the prototyping philosophy, these rules do not validate the
- *   shape or type of data. Authorization is the sole focus. Backend services are responsible
- *   for maintaining schema integrity.
+ * Data collections are protected, and access is granted only to authenticated users based on
+ * the principle of least privilege.
  */
 rules_version = '2';
 service cloud.firestore {
@@ -44,13 +23,11 @@ service cloud.firestore {
 
     /**
      * Placeholder for administrative or backend-only access.
-     * By default, this returns false, blocking all client-side access.
-     * TODO: Implement admin logic here, e.g., using Firebase custom claims.
-     * function isBackendOrAdmin() {
-     *   return request.auth.token.admin == true;
-     * }
+     * By default, this returns false. When admin roles are implemented,
+     * this function should be updated (e.g., using custom claims).
      */
     function isBackendOrAdmin() {
+      // return request.auth.token.admin == true;
       return false;
     }
 
@@ -59,67 +36,44 @@ service cloud.firestore {
     // ------------------------------------------------------------------------
 
     /**
-     * @description Manages TigerBeetle financial account data. Access is restricted to backend services.
+     * @description Manages TigerBeetle financial account data.
      * @path /tigerbeetle_accounts/{accountId}
-     * @allow (read/write) - No client-side access is permitted. Only backend processes with Admin SDK credentials can access this data.
-     * @deny (get) - A client application attempting to read an account document.
-     * @deny (create) - A client application attempting to create a new account.
-     * @principle Restricts all client-side access, assuming a backend-managed data model.
+     * @allow (read) - Authenticated users (operators) can read account data.
+     * @allow (write) - Write access is restricted to backend/admin processes to ensure data integrity.
      */
     match /tigerbeetle_accounts/{accountId} {
-      allow get: if isBackendOrAdmin();
-      allow list: if isBackendOrAdmin();
+      allow get: if isSignedIn();
+      allow list: if isSignedIn();
       allow create: if isBackendOrAdmin();
       allow update: if isBackendOrAdmin();
       allow delete: if isBackendOrAdmin();
 
       /**
-       * @description Manages transaction records for a specific TigerBeetle account. Access is restricted to backend services.
+       * @description Manages transaction records for a specific TigerBeetle account.
        * @path /tigerbeetle_accounts/{accountId}/tigerbeetle_transactions/{transactionId}
-       * @allow (read/write) - No client-side access is permitted. Only backend processes can manage transactions.
-       * @deny (get) - A client application attempting to read a specific transaction.
-       * @deny (list) - A client application attempting to list all transactions for an account.
-       * @principle Inherits the backend-only access model from its parent collection to ensure financial data integrity.
+       * @allow (read/write) - All access is restricted to backend services.
        */
       match /tigerbeetle_transactions/{transactionId} {
-        allow get: if isBackendOrAdmin();
-        allow list: if isBackendOrAdmin();
-        allow create: if isBackendOrAdmin();
-        allow update: if isBackendOrAdmin();
-        allow delete: if isBackendOrAdmin();
+        allow read, write: if isBackendOrAdmin();
       }
     }
 
     /**
-     * @description Stores system-wide configuration settings. Access is restricted to backend or administrative users.
+     * @description Stores system-wide configuration settings.
      * @path /configurations/{configId}
-     * @allow (read/write) - No client-side access is permitted by default. This should be updated to allow admins only.
-     * @deny (get) - A standard authenticated user trying to read a configuration setting.
-     * @deny (update) - Any client attempting to change a system setting.
-     * @principle Protects critical application settings from any client-side manipulation.
+     * @allow (read/write) - Access is restricted to backend or administrative users.
      */
     match /configurations/{configId} {
-      allow get: if isBackendOrAdmin();
-      allow list: if isBackendOrAdmin();
-      allow create: if isBackendOrAdmin();
-      allow update: if isBackendOrAdmin();
-      allow delete: if isBackendOrAdmin();
+      allow read, write: if isBackendOrAdmin();
     }
 
     /**
-     * @description Stores audit and monitoring logs. Access is restricted to backend services.
+     * @description Stores audit and monitoring logs.
      * @path /log_entries/{logId}
-     * @allow (read/write) - No client-side access is permitted. Logs are created by the backend and should only be read by authorized personnel or systems.
-     * @deny (create) - A client application trying to write a fake log entry.
-     * @deny (delete) - Any client attempting to delete or tamper with log history.
-     * @principle Ensures the integrity and reliability of audit trails by preventing client-side access.
+     * @allow (read/write) - Access is restricted to backend services to ensure log integrity.
      */
     match /log_entries/{logId} {
-      allow get: if isBackendOrAdmin();
-      allow list: if isBackendOrAdmin();
-      allow create: if isBackendOrAdmin();
-      allow update: if isBackendOrAdmin();
-      allow delete: if isBackendOrAdmin();
+      allow read, write: if isBackendOrAdmin();
     }
   }
 }
