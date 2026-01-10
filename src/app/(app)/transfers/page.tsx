@@ -69,7 +69,7 @@ export default function TransfersPage() {
     <div className="flex-1">
       <main className="p-4 sm:p-6 flex justify-center">
         <div className="w-full max-w-md">
-          <Card>
+          <Card className="glass-card">
             <CardHeader>
               <CardTitle>Create sFIAT Attestation</CardTitle>
               <CardDescription>

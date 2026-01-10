@@ -63,7 +63,7 @@ export default function AccountsPage() {
             Create Account
           </Button>
         </div>
-        <Card>
+        <Card className="glass-card">
           <CardContent>
             <Table>
               <TableHeader>

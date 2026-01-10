@@ -31,7 +31,7 @@ export default function MonitoringPage() {
   return (
     <div className="flex-1">
       <main className="p-4 sm:p-6">
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle>End-to-End Test Status</CardTitle>
             <CardDescription>
@@ -42,7 +42,7 @@ export default function MonitoringPage() {
             {e2eTests.map((test) => {
               const meta = statusMeta[test.status];
               return (
-                <Card key={test.id} className="flex flex-col">
+                <Card key={test.id} className="flex flex-col glass-card">
                   <CardHeader className="flex flex-row items-center justify-between pb-2">
                      <CardTitle className="text-base font-medium">{test.name}</CardTitle>
                     <meta.icon className={cn("h-6 w-6", meta.color, test.status === "running" && "animate-spin")} />

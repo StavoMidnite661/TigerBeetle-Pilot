@@ -45,7 +45,7 @@ export default function TransferHistoryPage() {
   return (
     <div className="flex-1">
       <main className="p-4 sm:p-6">
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle>Cleared Ledger</CardTitle>
             <CardDescription>The immutable record of all cleared ledger updates. Value enters the system via sFIAT attestation and is cleared here.</CardDescription>

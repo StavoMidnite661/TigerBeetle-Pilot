@@ -90,7 +90,7 @@ export default function AttestationsPage() {
   return (
     <div className="flex-1">
       <main className="p-4 sm:p-6">
-        <Card>
+        <Card className="glass-card">
           <CardHeader>
             <CardTitle>Attestations & Clearing</CardTitle>
             <CardDescription>
