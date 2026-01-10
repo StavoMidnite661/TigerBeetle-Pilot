@@ -46,7 +46,7 @@
     --card-foreground: 0 0% 98%;
     --popover: 240 6% 10%;
     --popover-foreground: 0 0% 98%;
-    --primary: 24 95% 53%; /* Orange */
+    --primary: 24 95% 60%; /* Orange */
     --primary-foreground: 0 0% 9%;
     --secondary: 240 5% 15%;
     --secondary-foreground: 0 0% 98%;
@@ -58,7 +58,7 @@
     --destructive-foreground: 0 0% 98%;
     --border: 240 5% 20%;
     --input: 240 5% 15%;
-    --ring: 24 95% 53%; /* Orange */
+    --ring: 24 95% 60%; /* Orange */
     --chart-1: 24 95% 53%; /* Orange */
     --chart-2: 174 80% 40%;
     --chart-3: 30 80% 55%;
