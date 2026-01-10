@@ -7,6 +7,7 @@ import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { initiateAnonymousSignIn, useAuth } from '@/firebase';
 import { Loader } from 'lucide-react';
+import Footer from '@/components/footer';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
@@ -33,7 +34,8 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
       <AppNav />
       <SidebarInset>
         <div className="flex flex-col min-h-screen">
-          {children}
+          <main className="flex-1">{children}</main>
+          <Footer />
         </div>
       </SidebarInset>
     </SidebarProvider>

@@ -20,14 +20,8 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased">
-        <div className="relative min-h-screen w-full bg-black">
-          <div
-            className="absolute inset-0 z-0"
-            style={{
-              background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(120, 180, 255, 0.25), transparent 70%), #000000",
-            }}
-          />
+      <body className="font-body antialiased background-glow">
+        <div className="relative min-h-screen w-full">
           <div className="relative z-10">
             <FirebaseClientProvider>
               {children}
