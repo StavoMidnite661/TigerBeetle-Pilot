@@ -7,13 +7,11 @@ import { Avatar, AvatarFallback } from './ui/avatar';
 import { Button } from './ui/button';
 import { Logo } from './logo';
 import { cn } from '@/lib/utils';
-import { User } from 'lucide-react';
+import { User, Settings } from 'lucide-react';
 
 const mainLinks = [
   { href: '/dashboard', label: 'Dashboard' },
-  { href: '/transfers', label: 'Trade' },
-  { href: '/accounts', label: 'Spend' },
-  { href: '/transfers/history', label: 'History' },
+  { href: '/settings', label: 'Settings' },
 ];
 
 export function AppHeader() {
@@ -26,7 +24,7 @@ export function AppHeader() {
         <div className="mr-4 flex">
           <Link href="/" className="mr-6 flex items-center space-x-2">
             <Logo className="h-6 w-6" />
-            <span className="font-bold inline-block">SOVR.credit</span>
+            <span className="font-bold inline-block">SOVR<span className="text-primary">.credit</span></span>
           </Link>
           <nav className="flex items-center gap-4 text-sm lg:gap-6">
             {mainLinks.map((link) => (
@@ -45,7 +43,7 @@ export function AppHeader() {
         </div>
 
         <div className="flex flex-1 items-center justify-end gap-2">
-          {user && (
+           {user && (
             <Button variant="outline" className="flex items-center gap-2">
               <Avatar className="h-6 w-6">
                 <AvatarFallback>
