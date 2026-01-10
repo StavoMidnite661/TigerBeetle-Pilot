@@ -19,10 +19,12 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { useCollection, useFirestore, useMemoFirebase, WithId } from "@/firebase";
 import { Check } from "lucide-react";
-import { collection, query, where, doc } from "firebase/firestore";
+import { collection, query, where, doc, getDoc, updateDoc } from "firebase/firestore";
 import { addDocumentNonBlocking, updateDocumentNonBlocking } from "@/firebase/non-blocking-updates";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useToast } from "@/hooks/use-toast";
+import { serverTimestamp, increment } from "firebase/firestore";
+
 
 type Attestation = {
   toAccountId: string;
@@ -49,7 +51,7 @@ export default function AttestationsPage() {
     rejected: "destructive",
   } as const;
 
-  const handleClearAttestation = (attestation: WithId<Attestation>) => {
+  const handleClearAttestation = async (attestation: WithId<Attestation>) => {
     if (!firestore) return;
 
     // 1. Create a new transfer document
@@ -60,7 +62,7 @@ export default function AttestationsPage() {
         amount: attestation.amount,
         currency: 'USD',
         status: 'completed',
-        createdAt: new Date().toISOString(),
+        createdAt: new Date().toISOString(), // This should ideally be a serverTimestamp
         attestationId: attestation.id,
     });
 
@@ -70,17 +72,18 @@ export default function AttestationsPage() {
         status: 'issued'
     });
 
-    // 3. Update the account balance
+    // 3. ATOMICALLY update the account balance on the server
     const accountRef = doc(firestore, 'tigerbeetle_accounts', attestation.toAccountId);
-    // This is not ideal as it's a read-then-write, but for this simulation it's acceptable.
-    // In a real system, this would be a single atomic operation handled by TigerBeetle via a secure backend.
+    
+    // Use the Firestore 'increment' FieldValue for a safe, atomic update.
+    // This avoids the read-then-write race condition.
     updateDocumentNonBlocking(accountRef, {
-        balance: (attestation.amount) // Note: This should be an increment, not an overwrite. Needs server-side logic.
-    })
+        balance: increment(attestation.amount)
+    });
 
     toast({
-        title: "Attestation Cleared",
-        description: `Value of $${attestation.amount} cleared to account ${attestation.toAccountId}.`,
+        title: "Ledger Updated",
+        description: `${attestation.amount} units cleared to account ${attestation.toAccountId}.`,
     })
   }
 
@@ -89,16 +92,16 @@ export default function AttestationsPage() {
       <main className="p-4 sm:p-6">
         <Card>
           <CardHeader>
-            <CardTitle>sFIAT Attestations</CardTitle>
+            <CardTitle>Attestations & Clearing</CardTitle>
             <CardDescription>
-              A list of all sFIAT attestations awaiting clearance. Clearing an attestation finalizes the value transfer.
+              A list of all attestations awaiting clearance. Clearing an attestation updates the ledger with the new units. This action is final.
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Attestation ID</TableHead>
+                  <TableHead>Commitment ID</TableHead>
                   <TableHead>Destination Account</TableHead>
                   <TableHead className="text-right">Amount</TableHead>
                   <TableHead>Status</TableHead>
@@ -119,12 +122,11 @@ export default function AttestationsPage() {
                 ))}
                 {!isLoading && attestations?.map((attestation) => (
                   <TableRow key={attestation.id}>
-                    <TableCell className="font-medium">
-                      {attestation.id}
+                    <TableCell className="font-medium font-mono text-xs">
+                      {attestation.commitmentId}
                     </TableCell>
                     <TableCell>{attestation.toAccountId}</TableCell>
                     <TableCell className="text-right">
-                      $
                       {attestation.amount.toLocaleString("en-US", {
                         minimumFractionDigits: 2,
                         maximumFractionDigits: 2,

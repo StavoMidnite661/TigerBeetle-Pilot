@@ -58,8 +58,8 @@ export default function TransfersPage() {
     });
 
     toast({
-        title: "Attestation Requested",
-        description: `An attestation for $${values.amount} has been created and is pending clearance.`,
+        title: "Attestation Submitted",
+        description: `An attestation for ${values.amount} units is pending clearance.`,
     });
 
     form.reset();
@@ -73,8 +73,7 @@ export default function TransfersPage() {
             <CardHeader>
               <CardTitle>Create sFIAT Attestation</CardTitle>
               <CardDescription>
-                Introduce value into the system by creating an sFIAT
-                attestation. This is a receipt for an external value commitment.
+                Attest to a sacrifice of value in the real world (e.g., a burned stablecoin TXID or wire transfer ID) to introduce spendable units into the ledger.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -104,7 +103,7 @@ export default function TransfersPage() {
                     name="amount"
                     render={({ field }) => (
                       <FormItem>
-                        <FormLabel>Amount (USD)</FormLabel>
+                        <FormLabel>Amount (Units)</FormLabel>
                         <FormControl>
                           <Input type="number" placeholder="0.00" {...field} />
                         </FormControl>
@@ -120,12 +119,12 @@ export default function TransfersPage() {
                         <FormLabel>External Commitment ID</FormLabel>
                         <FormControl>
                           <Input
-                            placeholder="e.g., Wire Transfer ID"
+                            placeholder="e.g., Burn TXID, Wire ID"
                             {...field}
                           />
                         </FormControl>
                          <FormDescription>
-                          A reference to the real-world value transaction.
+                          The verifiable proof of your real-world value sacrifice.
                         </FormDescription>
                         <FormMessage />
                       </FormItem>

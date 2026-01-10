@@ -47,14 +47,14 @@ export default function TransferHistoryPage() {
       <main className="p-4 sm:p-6">
         <Card>
           <CardHeader>
-            <CardTitle>Cleared Transfers (Ledger)</CardTitle>
-            <CardDescription>The immutable record of all cleared transfers. Value enters the system via sFIAT and is cleared here.</CardDescription>
+            <CardTitle>Cleared Ledger</CardTitle>
+            <CardDescription>The immutable record of all cleared ledger updates. Value enters the system via sFIAT attestation and is cleared here.</CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Transfer ID</TableHead>
+                  <TableHead>Ledger Update ID</TableHead>
                   <TableHead>From Account</TableHead>
                   <TableHead>To Account</TableHead>
                   <TableHead className="text-right">Amount</TableHead>
@@ -75,11 +75,11 @@ export default function TransferHistoryPage() {
                 ))}
                 {!isLoading && transfers?.map((transfer) => (
                   <TableRow key={transfer.id}>
-                    <TableCell className="font-medium">{transfer.id}</TableCell>
+                    <TableCell className="font-medium font-mono text-xs">{transfer.id}</TableCell>
                     <TableCell>{transfer.fromAccountId || 'sFIAT Genesis'}</TableCell>
                     <TableCell>{transfer.toAccountId}</TableCell>
                     <TableCell className="text-right">
-                      ${transfer.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
+                      {transfer.amount.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}
                     </TableCell>
                       <TableCell>
                     <Badge variant={statusVariant[transfer.status]}>{transfer.status}</Badge>
@@ -91,7 +91,7 @@ export default function TransferHistoryPage() {
             </Table>
             {!isLoading && (!transfers || transfers.length === 0) && (
                 <div className="text-center p-8 text-muted-foreground">
-                    No transfers found.
+                    No ledger updates found.
                 </div>
             )}
           </CardContent>

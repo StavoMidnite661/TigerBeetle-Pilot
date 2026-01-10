@@ -6,7 +6,7 @@ This is a Next.js application, the control plane for a SOVR-compliant TigerBeetl
 
 The system operates under a strict SOVR doctrine:
 - **Truth Mechanical, Not Narrative**: The system enforces mechanical truth. There are no overrides, no semantic reversion, and no narrative bullshit.
-- **Unyielding Finality**: Obligations are cleared, not "held". Balances are math results. All transfers are deterministic and irreversible.
+- **Unyielding Finality**: Obligations are cleared, not "held". Balances are math results. All ledger updates are deterministic and irreversible.
 - **Attestation Precedes Clearing**: All operations require attestation before execution. There are no reversals.
 - **Language Discipline**: The agent audits all interactions for forbidden terms, enforcing strict compliance with SOVR principles.
 
@@ -15,7 +15,7 @@ The system operates under a strict SOVR doctrine:
 ## The Funding Doctrine: sFIAT
 
 ### Sustainability Without a Credit System
-The core principle is that the system does not extend credit, promise redemption, or create future obligations. It settles by clearing **attested value**. Agents must never model, imply, or simulate a credit relationship.
+The core principle is that the system does not extend credit, promise redemption, or create future obligations. It operates by clearing **attested, sacrificed value**. Agents must never model, imply, or simulate a credit relationship. **Money does not move; ledgers are updated.**
 
 Operationally, this means:
 - **No lending or borrowing**
@@ -25,16 +25,16 @@ Operationally, this means:
 - **No balance sheet expansion**
 
 ### The sFIAT Mechanism
-Value is introduced **only by Attestation**. This is not finance; it is mechanical truth. Value enters through explicit, external attestation events.
+Value is introduced **only by Attestation of a real-world value sacrifice**. This is not finance; it is mechanical truth. Value enters the ledger through explicit, external attestation events, such as the burning of a stablecoin or a confirmed wire transfer.
 
-**sFIAT** is the formal representation of this external value commitment. It is a receipt that says, "real-world value has already been committed elsewhere." It is evidence, not money.
+**sFIAT** is the formal, on-ledger representation of this external event. It is a receipt that says, "real-world value has already been sacrificed elsewhere." It is evidence, not money.
 
 ### What sFIAT is (Formally)
 sFIAT represents:
-1.  A **declared value source**.
-2.  Backed by an **off-ledger real-world commitment**.
+1.  A **declared value source** from a real-world sacrifice.
+2.  Backed by an **off-ledger verifiable event** (e.g., a transaction hash).
 3.  Introduced only via an **explicit operator/trust authorization**.
-4.  Converted into **on-ledger cleared spendable units**.
+4.  Converted into **on-ledger cleared spendable units** via a ledger update.
 5.  Once converted, the sFIAT **disappears**. It does not live inside the system.
 
 Only cleared balances remain. The system no longer cares "where it came from." Only conservation and balances matter.
@@ -51,12 +51,12 @@ An agent must never treat sFIAT as:
 If an agent models redemption, repayment, or backing guarantees, they are violating core doctrine.
 
 ### The Funding Flow (Exact Order)
-This is the only allowed flow for introducing value:
-1.  **External Value Commitment** (e.g., a wire transfer is confirmed)
-2.  **sFIAT Attestation Event** (An operator creates an attestation, referencing the commitment)
+This is the only allowed flow for updating the ledger:
+1.  **External Value Sacrifice** (e.g., a stablecoin is burned, a wire transfer is confirmed)
+2.  **sFIAT Attestation Event** (An operator creates an attestation, referencing the proof of sacrifice, like a TXID)
 3.  **Operator/Trust Authorization** (The system verifies the operator's permission)
-4.  **Ledger Mint/Allocation** (This step is metaphorical; no "minting" occurs. The attestation is prepared for clearing.)
-5.  **TigerBeetle Clearing** (The attestation is cleared, and the corresponding balance is updated)
+4.  **Ledger Update Message Preparation** (The attestation is prepared for clearing)
+5.  **TigerBeetle Clearing** (The message is cleared, and the corresponding balance is updated)
 6.  **Spendable Balance Exists**
 
 **No step may be skipped.**
@@ -73,8 +73,8 @@ flowchart TD
     %% =========================
     %% External World
     %% =========================
-    EV[External Real-World<br/>Value Commitment]
-        -->|Evidence| SF[sFIAT Attestation]
+    EV[External Real-World<br/>Value Sacrifice]
+        -->|Proof (e.g., TXID)| SF[sFIAT Attestation]
 %% =========================
     %% Authority Gate
     %% =========================
@@ -82,7 +82,7 @@ flowchart TD
 %% =========================
     %% Ledger Authority
     %% =========================
-    OP -->|Mint / Allocate| TB[(TigerBeetle<br/>Clearing Ledger)]
+    OP -->|Prepare Message| TB[(TigerBeetle<br/>Clearing Ledger)]
 %% =========================
     %% State Transition
     %% =========================
@@ -142,12 +142,12 @@ Any code path not representable by this diagram is invalid by definition.
 
 The core architecture is a hardened, locked-in structure embodying the SOVR doctrine.
 
-- **Orchestrator**: Utilizes GenAI for deterministic reasoning on transfers and attestation planning.
+- **Orchestrator**: Utilizes GenAI for deterministic reasoning on ledger updates and attestation planning.
 - **SOVR Tools**: A suite of tools for clearing, attestation, and observation, ensuring no-value-drift and enforcing policy.
-    - **Clearing Tools**: Submit transfers and verify finality with mechanical truth.
+    - **Clearing Tools**: Submit ledger updates and verify finality with mechanical truth.
     - **Attestation Tools**: Validate claims, issue tokens, and prevent double-spends.
 - **Immutable Ledger**: All actions produce immutable audit trails.
 
 This application is the interface to that sovereign system.
 
-To get started, run `npm run dev` and navigate to `http://localhost:9002`.
+To get started, run `npm run dev` and navigate to `http://localhost:9005`.
