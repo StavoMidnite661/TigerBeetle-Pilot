@@ -5,7 +5,6 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { AppHeader } from "@/components/header";
 import { accounts, transfers } from "@/lib/data";
 import { Activity, ArrowRightLeft, DollarSign, Users } from "lucide-react";
 import TransactionChart from "./transaction-chart";
@@ -17,7 +16,6 @@ export default function DashboardPage() {
 
   return (
     <div className="flex-1 flex flex-col background-glow">
-      <AppHeader title="Dashboard" />
       <main className="flex-1 p-4 sm:p-6 space-y-6">
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
           <Card className="flex flex-col glass-card">

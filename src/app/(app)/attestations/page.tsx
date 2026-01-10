@@ -1,6 +1,5 @@
 'use client';
 
-import { AppHeader } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -87,7 +86,6 @@ export default function AttestationsPage() {
 
   return (
     <div className="flex-1">
-      <AppHeader title="Attestation & Clearing" />
       <main className="p-4 sm:p-6">
         <Card>
           <CardHeader>

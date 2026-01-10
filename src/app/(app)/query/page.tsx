@@ -1,4 +1,3 @@
-import { AppHeader } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -13,7 +12,6 @@ import { Play } from "lucide-react";
 export default function QueryPage() {
   return (
     <div className="flex-1">
-      <AppHeader title="Query" />
       <main className="p-4 sm:p-6">
         <Card>
           <CardHeader>

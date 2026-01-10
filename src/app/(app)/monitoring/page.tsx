@@ -1,4 +1,3 @@
-import { AppHeader } from "@/components/header";
 import {
   Card,
   CardContent,
@@ -31,7 +30,6 @@ export default function MonitoringPage() {
 
   return (
     <div className="flex-1">
-      <AppHeader title="System Monitoring" />
       <main className="p-4 sm:p-6">
         <Card>
           <CardHeader>

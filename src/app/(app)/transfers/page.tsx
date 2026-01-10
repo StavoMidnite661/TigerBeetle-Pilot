@@ -1,6 +1,5 @@
 'use client';
 
-import { AppHeader } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -68,7 +67,6 @@ export default function TransfersPage() {
 
   return (
     <div className="flex-1">
-      <AppHeader title="Funding (sFIAT)" />
       <main className="p-4 sm:p-6 flex justify-center">
         <div className="w-full max-w-md">
           <Card>

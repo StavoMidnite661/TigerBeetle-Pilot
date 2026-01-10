@@ -1,6 +1,5 @@
 'use client';
 
-import { AppHeader } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -56,18 +55,18 @@ export default function AccountsPage() {
 
   return (
     <div className="flex-1">
-      <AppHeader title="Accounts">
-        <Button onClick={createNewAccount}>
-          <PlusCircle className="mr-2 h-4 w-4" />
-          Create Account
-        </Button>
-      </AppHeader>
       <main className="p-4 sm:p-6">
+        <div className="flex items-center justify-between mb-6">
+          <div>
+            <h1 className="text-2xl font-bold">Accounts</h1>
+            <p className="text-muted-foreground">A list of all accounts in the system.</p>
+          </div>
+          <Button onClick={createNewAccount}>
+            <PlusCircle className="mr-2 h-4 w-4" />
+            Create Account
+          </Button>
+        </div>
         <Card>
-          <CardHeader>
-            <CardTitle>All Accounts</CardTitle>
-            <CardDescription>A list of all accounts in the system.</CardDescription>
-          </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>

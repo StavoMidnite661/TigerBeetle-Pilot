@@ -1,6 +1,5 @@
 'use client';
 
-import { AppHeader } from "@/components/header";
 import {
   Card,
   CardContent,
@@ -45,7 +44,6 @@ export default function TransferHistoryPage() {
 
   return (
     <div className="flex-1">
-      <AppHeader title="Transfer History" />
       <main className="p-4 sm:p-6">
         <Card>
           <CardHeader>

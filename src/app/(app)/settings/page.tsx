@@ -1,4 +1,3 @@
-import { AppHeader } from "@/components/header";
 import { Button } from "@/components/ui/button";
 import {
   Card,
@@ -15,7 +14,6 @@ import { KeyRound, Server } from "lucide-react";
 export default function SettingsPage() {
   return (
     <div className="flex-1">
-      <AppHeader title="Settings" />
       <main className="p-4 sm:p-6 space-y-6">
         <Card>
           <CardHeader>
