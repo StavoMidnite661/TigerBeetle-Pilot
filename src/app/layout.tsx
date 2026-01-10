@@ -4,7 +4,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { FirebaseClientProvider } from '@/firebase';
 
 export const metadata: Metadata = {
-  title: 'TigerBeetle Pilot',
+  title: 'SOVR Credit Terminal',
   description: 'An agent to manage your TigerBeetle integration.',
 };
 
@@ -20,15 +20,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet" />
       </head>
-      <body className="font-body antialiased background-glow">
-        <div className="relative min-h-screen w-full">
-          <div className="relative z-10">
-            <FirebaseClientProvider>
-              {children}
-            </FirebaseClientProvider>
-            <Toaster />
-          </div>
-        </div>
+      <body className="font-body antialiased bg-black">
+        <FirebaseClientProvider>
+          {children}
+        </FirebaseClientProvider>
+        <Toaster />
       </body>
     </html>
   );

@@ -1,13 +1,12 @@
 'use client';
 
-import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar';
-import AppNav from '@/components/nav';
 import { useUser } from '@/firebase';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { initiateAnonymousSignIn, useAuth } from '@/firebase';
 import { Loader } from 'lucide-react';
 import Footer from '@/components/footer';
+import { AppHeader } from '@/components/header';
 
 export default function AppLayout({ children }: { children: React.ReactNode }) {
   const { user, isUserLoading } = useUser();
@@ -30,14 +29,12 @@ export default function AppLayout({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <SidebarProvider>
-      <AppNav />
-      <SidebarInset>
-        <div className="flex flex-col min-h-screen">
-          <main className="flex-1">{children}</main>
-          <Footer />
-        </div>
-      </SidebarInset>
-    </SidebarProvider>
+    <>
+      <AppHeader />
+      <div className="flex flex-col min-h-screen">
+        <main className="flex-1">{children}</main>
+        <Footer />
+      </div>
+    </>
   );
 }
