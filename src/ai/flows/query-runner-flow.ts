@@ -95,12 +95,17 @@ const queryRunnerFlow = ai.defineFlow(
     const llmResponse = await ai.generate({
       prompt: `You are a Firestore query expert. Your task is to interpret the user's request and use the provided tool to query the database.
       
-      User Request: "${input.queryString}"
-      
-      Analyze the request and call the firestoreQueryTool with the appropriate parameters.
-      If the user does not specify an order, order by 'createdAt' in descending order by default if the field exists on the collection.
-      If the user does not specify a limit, do not apply one unless it is implicit in the request (e.g. "latest", "most recent").
-      `,
+User Request: "${input.queryString}"
+
+Analyze the request and call the firestoreQueryTool with the appropriate parameters.
+
+VERY IMPORTANT: If the user requests the "latest" or "most recent" items, or implies an ordering by time, you must use the correct timestamp field for the specified collection:
+- For the 'attestations' collection, order by the 'createdAt' field, descending.
+- For the 'tigerbeetle_accounts' collection, order by the 'createdAt' field, descending.
+- For the 'transfers' collection, order by the 'timestamp' field, descending.
+
+If the user does not specify a limit, do not apply one unless it is implicit in the request (e.g. "latest", "most recent" implies a small limit like 5).
+`,
       tools: [firestoreQueryTool],
       model: 'googleai/gemini-2.5-flash',
     });
