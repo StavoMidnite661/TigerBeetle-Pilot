@@ -11,6 +11,7 @@ import { User } from 'lucide-react';
 
 const mainLinks = [
   { href: '/dashboard', label: 'Dashboard' },
+  { href: '/query', label: 'Query' },
   { href: '/settings', label: 'Settings' },
 ];
 
