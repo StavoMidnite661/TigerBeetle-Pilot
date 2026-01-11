@@ -110,16 +110,17 @@ If the user does not specify a limit, do not apply one unless it is implicit in 
       model: 'googleai/gemini-2.5-flash',
     });
 
-    const toolRequests = llmResponse.toolRequests;
-    if (toolRequests && toolRequests.length > 0) {
-      const toolResponse = toolRequests[0].outputFor(firestoreQueryTool.name);
-      if (toolResponse) {
-        return { results: toolResponse };
-      }
-    }
+    const toolResponse = llmResponse.outputFor(firestoreQueryTool.name);
 
-    const textResponse = llmResponse.text();
+    if (toolResponse) {
+       return { results: toolResponse };
+    }
+    
+    // If the model didn't use the tool but just responded with text.
+    const textResponse = llmResponse.text;
     if (textResponse) {
+      // This is a fallback. Ideally, we want to guide the model to always use the tool.
+      // We'll return the text response wrapped in our expected output structure.
       return { results: [{ response: textResponse }] };
     }
     
