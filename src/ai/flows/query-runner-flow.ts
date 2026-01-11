@@ -110,7 +110,7 @@ If the user does not specify a limit, do not apply one unless it is implicit in 
       model: 'googleai/gemini-2.5-flash',
     });
 
-    const toolResponse = llmResponse.outputFor(firestoreQueryTool.name);
+    const toolResponse = llmResponse.output(firestoreQueryTool.name);
 
     if (toolResponse) {
        return { results: toolResponse };
