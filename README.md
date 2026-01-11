@@ -1,3 +1,22 @@
+Typically, the commands you would run from your terminal in the project directory are:
+
+Initialize a Git repository (if you haven't already):
+git init
+
+Add all the files to be tracked:
+git add .
+
+Create your first commit:
+git commit -m "Initial commit of SOVR Credit Terminal"
+
+Connect your local repository to your remote GitHub repository and push the code:
+git remote add origin <your-repository-url>
+git push -u origin main
+
+Once you do that, your code will appear on GitHub, and you'll be ready for the final deployment steps.
+
+
+
 # SOVR-UI: The Sovereign Value Attestation Platform
 
 ## Overview
