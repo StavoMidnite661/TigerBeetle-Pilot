@@ -7,7 +7,7 @@ import { Avatar, AvatarFallback } from './ui/avatar';
 import { Button } from './ui/button';
 import { Logo } from './logo';
 import { cn } from '@/lib/utils';
-import { User, Settings } from 'lucide-react';
+import { User } from 'lucide-react';
 
 const mainLinks = [
   { href: '/dashboard', label: 'Dashboard' },
