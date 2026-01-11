@@ -1,153 +1,78 @@
-# SOVR TigerBeetle Specialist
+# SOVR-UI: The Sovereign Value Attestation Platform
 
-This is a Next.js application, the control plane for a SOVR-compliant TigerBeetle integration. It is being forged into a SOVR TigerBeetle Specialist, an agent enforcing unyielding finality.
+## Overview
 
-## SOVR Doctrine
+SOVR-UI is the user-facing control plane for a new economic system built on the principles of sovereign value and cryptographic truth. It provides a dashboard for interacting with a sovereign ledger, specifically for creating and managing **sFIAT Attestations**.
 
-The system operates under a strict SOVR doctrine:
-- **Truth Mechanical, Not Narrative**: The system enforces mechanical truth. There are no overrides, no semantic reversion, and no narrative bullshit.
-- **Unyielding Finality**: Obligations are cleared, not "held". Balances are math results. All ledger updates are deterministic and irreversible.
-- **Attestation Precedes Clearing**: All operations require attestation before execution. There are no reversals.
-- **Language Discipline**: The agent audits all interactions for forbidden terms, enforcing strict compliance with SOVR principles.
+This application is built on the core idea that real-world value sacrifices (e.g., payments, labor, energy expenditure) can be verifiably attested to and brought on-chain as a new asset class, referred to as sFIAT (sovereign Fiat).
 
----
+This UI connects to a Firebase backend (Firestore for data, Auth for identity) and is designed to interact with a TigerBeetle cluster for final, deterministic transaction settlement. The system is architected to be a permissionless, peer-to-peer financial network where the creation of value is decentralized.
 
-## The Funding Doctrine: sFIAT
+## Key Concepts
 
-### Sustainability Without a Credit System
-The core principle is that the system does not extend credit, promise redemption, or create future obligations. It operates by clearing **attested, sacrificed value**. Agents must never model, imply, or simulate a credit relationship. **Money does not move; ledgers are updated.**
+- **Attestation:** A cryptographically signed claim that a specific, real-world value sacrifice has occurred.
+- **sFIAT:** A sovereign digital asset representing a claim on real-world value. Its value is derived from the proof of sacrifice it is associated with.
+- **Commitment ID:** A unique identifier from a legacy system (e.g., a bank transaction ID, an invoice number) that serves as the proof of sacrifice.
 
-Operationally, this means:
-- **No lending or borrowing**
-- **No negative balances**
-- **No IOUs or future promises**
-- **No "available credit"**
-- **No balance sheet expansion**
+## Technical Architecture
 
-### The sFIAT Mechanism
-Value is introduced **only by Attestation of a real-world value sacrifice**. This is not finance; it is mechanical truth. Value enters the ledger through explicit, external attestation events, such as the burning of a stablecoin or a confirmed wire transfer.
+- **Framework:** Next.js 14
+- **UI:** React, Shadcn UI, Tailwind CSS
+- **Backend as a Service (BaaS):** Firebase (Authentication and Firestore)
+- **Deployment:** Vercel (Recommended)
 
-**sFIAT** is the formal, on-ledger representation of this external event. It is a receipt that says, "real-world value has already been sacrificed elsewhere." It is evidence, not money.
+## Installation and Setup
 
-### What sFIAT is (Formally)
-sFIAT represents:
-1.  A **declared value source** from a real-world sacrifice.
-2.  Backed by an **off-ledger verifiable event** (e.g., a transaction hash).
-3.  Introduced only via an **explicit operator/trust authorization**.
-4.  Converted into **on-ledger cleared spendable units** via a ledger update.
-5.  Once converted, the sFIAT **disappears**. It does not live inside the system.
+Follow these steps to get the application running locally.
 
-Only cleared balances remain. The system no longer cares "where it came from." Only conservation and balances matter.
+### 1. Clone the Repository
 
-### What sFIAT is NOT
-An agent must never treat sFIAT as:
-- A loan or credit
-- A balance that can go negative
-- A redeemable promise
-- A stablecoin
-- A claim on reserves
-- A liability of the system
-
-If an agent models redemption, repayment, or backing guarantees, they are violating core doctrine.
-
-### The Funding Flow (Exact Order)
-This is the only allowed flow for updating the ledger:
-1.  **External Value Sacrifice** (e.g., a stablecoin is burned, a wire transfer is confirmed)
-2.  **sFIAT Attestation Event** (An operator creates an attestation, referencing the proof of sacrifice, like a TXID)
-3.  **Operator/Trust Authorization** (The system verifies the operator's permission)
-4.  **Ledger Update Message Preparation** (The attestation is prepared for clearing)
-5.  **TigerBeetle Clearing** (The message is cleared, and the corresponding balance is updated)
-6.  **Spendable Balance Exists**
-
-**No step may be skipped.**
-
----
-
-## Canonical Authority Diagram
-
-This diagram encodes the doctrine visually and prevents agent confusion. It is the unyielding source of truth for authority flow.
-
-```mermaid
-%% sFIAT → Clearing → Spending (Canonical Flow)
-flowchart TD
-    %% =========================
-    %% External World
-    %% =========================
-    EV[External Real-World<br/>Value Sacrifice]
-        -->|Proof (e.g., TXID)| SF[sFIAT Attestation]
-%% =========================
-    %% Authority Gate
-    %% =========================
-    SF -->|Authorize| OP[Operator / Trust<br/>Authorization]
-%% =========================
-    %% Ledger Authority
-    %% =========================
-    OP -->|Prepare Message| TB[(TigerBeetle<br/>Clearing Ledger)]
-%% =========================
-    %% State Transition
-    %% =========================
-    TB -->|Cleared Balance| BAL[Spendable Ledger Balance]
-%% =========================
-    %% Execution Layer
-    %% =========================
-    BAL -->|Spend Request| SP[Spend Engine]
-    SP -->|Honor| AD[Adapter / Merchant]
-%% =========================
-    %% Prohibitions
-    %% =========================
-    SF -.x-> SP
-    SF -.x-> AD
-    OP -.x-> AD
-    AD -.x-> TB
-%% =========================
-    %% Notes
-    %% =========================
-    classDef authority fill:#0f172a,color:#fff,stroke:#38bdf8,stroke-width:2px
-    classDef forbidden fill:#7f1d1d,color:#fff,stroke:#ef4444,stroke-width:2px
-class TB authority
-    class SF,SP,AD forbidden
+```bash
+git clone <your-repository-url>
+cd <repository-name>
 ```
 
-### How to Read This Diagram (Agent-Safe)
-- **Solid arrows (→)**: ✅ Allowed authority flow
-- **Dashed red arrows (-.x->)**: ❌ Forbidden authority shortcuts
+### 2. Install Dependencies
 
-### Key Authority Rules Encoded
-1.  **sFIAT Is a Gate — Not a Balance**
-    *   sFIAT never touches:
-        *   Spend Engine
-        *   Adapters
-        *   Ledger balances
-    *   If an agent draws a path from sFIAT to spending → they’re wrong.
+```bash
+npm install
+```
 
-2.  **TigerBeetle Is the Sole Clearing Authority**
-    *   Only TigerBeetle can create:
-        *   Spendable balances
-    *   No adapter, narrative, or service may bypass it.
+### 3. Configure Environment Variables
 
-3.  **Honoring Is Downstream Only**
-    *   Adapters act *after* clearing.
-    *   Honoring failure does not roll back clearing.
+This project uses Firebase for its backend. You will need to create a Firebase project and get your configuration credentials.
 
-4.  **No Reverse Authority**
-    *   Adapters cannot mutate ledger state.
-    *   Operators cannot honor.
-    *   Clients cannot clear.
+1. Go to the [Firebase Console](https://console.firebase.google.com/) and create a new project.
+2. In your project settings, add a new Web App.
+3. Copy the `firebaseConfig` object values.
 
-Any code path not representable by this diagram is invalid by definition.
+Create a new file named `.env.local` in the root of the project. Paste your Firebase credentials into this file in the following format:
 
----
+```
+NEXT_PUBLIC_FIREBASE_API_KEY=AIz...
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your-project-id.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your-project-id.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=...
+NEXT_PUBLIC_FIREBASE_APP_ID=1:...:web:...
+```
 
-## Architecture
+**Note:** This `.env.local` file is already listed in `.gitignore` and will not be committed to your repository.
 
-The core architecture is a hardened, locked-in structure embodying the SOVR doctrine.
+### 4. Run the Development Server
 
-- **Orchestrator**: Utilizes GenAI for deterministic reasoning on ledger updates and attestation planning.
-- **SOVR Tools**: A suite of tools for clearing, attestation, and observation, ensuring no-value-drift and enforcing policy.
-    - **Clearing Tools**: Submit ledger updates and verify finality with mechanical truth.
-    - **Attestation Tools**: Validate claims, issue tokens, and prevent double-spends.
-- **Immutable Ledger**: All actions produce immutable audit trails.
+```bash
+npm run dev
+```
 
-This application is the interface to that sovereign system.
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-To get started, run `npm run dev` and navigate to `http://localhost:9005`.
+## Deployment to Vercel
+
+This application is optimized for deployment on Vercel.
+
+1.  **Push to GitHub:** Ensure your project is pushed to a GitHub repository.
+2.  **Import to Vercel:** Go to your Vercel dashboard and import the repository.
+3.  **Configure Environment Variables:** During the import process, Vercel will ask for environment variables. Copy the contents of your `.env.local` file and paste them into the Vercel configuration.
+4.  **Deploy:** Click the "Deploy" button. Vercel will automatically build and deploy your application.
+
