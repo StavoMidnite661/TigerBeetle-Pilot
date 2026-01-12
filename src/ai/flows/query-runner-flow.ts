@@ -19,7 +19,7 @@ import {
   getDocs,
   QueryConstraint,
 } from 'firebase/firestore';
-import { initializeFirebase } from '@/firebase';
+import { initializeFirebaseServer } from '@/firebase/server';
 
 const RunQueryInputSchema = z.object({
   queryString: z.string().describe('The natural language query to run against Firestore.'),
@@ -32,7 +32,7 @@ export const RunQueryOutputSchema = z.object({
 export type RunQueryOutput = z.infer<typeof RunQueryOutputSchema>;
 
 // Initialize outside the flow to leverage a single instance.
-const { firestore } = initializeFirebase();
+const { firestore } = initializeFirebaseServer();
 
 const firestoreQueryTool = ai.defineTool(
   {
@@ -93,19 +93,8 @@ const queryRunnerFlow = ai.defineFlow(
   },
   async (input) => {
     const llmResponse = await ai.generate({
-      prompt: `You are a Firestore query expert. Your task is to interpret the user's request and use the provided tool to query the database.
-      
-User Request: "${input.queryString}"
-
-Analyze the request and call the firestoreQueryTool with the appropriate parameters.
-
-VERY IMPORTANT: If the user requests the "latest" or "most recent" items, or implies an ordering by time, you must use the correct timestamp field for the specified collection:
-- For the 'attestations' collection, order by the 'createdAt' field, descending.
-- For the 'tigerbeetle_accounts' collection, order by the 'createdAt' field, descending.
-- For the 'transfers' collection, order by the 'timestamp' field, descending.
-
-If the user does not specify a limit, do not apply one unless it is implicit in the request (e.g. "latest", "most recent" implies a small limit like 5).
-`,
+      prompt: `You are a Firestore query expert. Your task is to interpret the user's request and use the provided tool to query the database.\n      
+User Request: "${input.queryString}"\n\nAnalyze the request and call the firestoreQueryTool with the appropriate parameters.\n\nVERY IMPORTANT: If the user requests the "latest" or "most recent" items, or implies an ordering by time, you must use the correct timestamp field for the specified collection:\n- For the 'attestations' collection, order by the 'createdAt' field, descending.\n- For the 'tigerbeetle_accounts' collection, order by the 'createdAt' field, descending.\n- For the 'transfers' collection, order by the 'timestamp' field, descending.\n\nIf the user does not specify a limit, do not apply one unless it is implicit in the request (e.g. "latest", "most recent" implies a small limit like 5).\n`,
       tools: [firestoreQueryTool],
       model: 'googleai/gemini-2.5-flash',
     });
